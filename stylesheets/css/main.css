@@ -13,15 +13,14 @@ header{
 
 #gameArea{
   width: 100%;
-  height: 500px;
 }
 
-#gameBoard, td{
+#answerBoard, #gameBoard, td{
   border-collapse: collapse;
   border: solid 1px #000;
 }
 
-#gameBoard{
+#answerBoard, #gameBoard{
   margin: 50px auto;
 }
 
