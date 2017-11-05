@@ -1,5 +1,42 @@
+let diagram = '●'
+let length = localStorage.getItem('length') ? JSON.parse(localStorage.getItem('length')) : 3; //マス目の長さ
+let number = localStorage.getItem('number') ? JSON.parse(localStorage.getItem('number')) : 5; //●の数
+let miliSec = 1000; // 解答が消えるまでの時間
+let answerArray = generateAnswerArray(length, number, diagram);
+let playerArray = JSON.parse(JSON.stringify((new Array(length)).fill((new Array(length)).fill(''))));
+let level = localStorage.getItem('level') ? JSON.parse(localStorage.getItem('level')) : 1;
+let score = localStorage.getItem('score') ? JSON.parse(localStorage.getItem('score')) : 0;;
+
 function sleepByPromise(miliSec) { 
   return new Promise((resolve) => setTimeout(resolve, miliSec));
+}
+
+function showAnswer(answerArray, playerArray) {
+  answerArray.forEach((row, rowNumber) => {
+    row.forEach((element, colNumber) => {
+      if (element != playerArray[rowNumber][colNumber]){
+        let curId = '#' + rowNumber + colNumber;
+        if (playerArray[rowNumber][colNumber] === diagram) {
+          $(curId).css({'text-decoration': 'line-through'});
+        } else {
+          $(curId).text(diagram);
+          $(curId).css({'color': '#f00'});
+        }
+      }
+    });
+  });
+}
+
+function calcScore(answerArray, playerArray) {
+  let score = 0;
+  answerArray.forEach((row, rowNumber) => {
+    row.forEach((element, colNumber) => {
+      if (element === diagram && element === playerArray[rowNumber][colNumber]){
+        score += 1;
+      }
+    });
+  });
+  return score;
 }
 
 function checkAnswer(answerArray, playerArray) {
@@ -50,18 +87,9 @@ function generateGrid(squareArray, boardName) {
       }
   });
   $('#gameArea').html(tableCode);
-}
 
-$(() => {
-  //情報の受け取り
-  let length = localStorage.getItem('length') ? JSON.parse(localStorage.getItem('length')) : 3; //マス目の長さ
-  let number = localStorage.getItem('number') ? JSON.parse(localStorage.getItem('number')) : 5; //●の数
-  let miliSec = 1000; // 解答が消えるまでの時間
-  let diagram = '●'
-  let answerArray = generateAnswerArray(length, number, diagram);
-  let playerArray = JSON.parse(JSON.stringify((new Array(length)).fill((new Array(length)).fill(''))));
-
-  $('td').on('click', function() {
+  //描画後にちゃんと紐付ける
+    $('td').on('click', function() {
     let clickedId = $(this).attr('id');
     if ($(this).text()) {
       $(this).text('');
@@ -70,37 +98,47 @@ $(() => {
       playerArray[clickedId[0]][clickedId[1]] = diagram;
       $(this).text(diagram);
     }
-    console.log(clickedId, playerArray);
   });
+}
+
+$(() => {
+  //初期化&描画
+  $('#level').text('レベル: ' + level);
+  $('#score').text('スコア: ' + score);
+  generateGrid(answerArray, 'answerBoard');
+
+  // 解答のフェードアウト
+  hideAnswer(length, miliSec);
 
   $('#answerButton').on('click', function() {
     $('#answerButton').css('display', 'none');
-
+    score += calcScore(answerArray, playerArray);
+    $('#score').text('スコア: ' + score);
     if (checkAnswer(answerArray, playerArray)) {
       $('#result').text('正解！');
       $('#nextButton').css('display', 'block');
     } else {
       $('#result').text('不正解');
+      showAnswer(answerArray, playerArray);
       $('#retryButton').css('display', 'block');
     }
   });
 
   $('#nextButton').on('click', function() {
     localStorage.setItem('length', length + 1);
-    localStorage.setItem('number', number + 1);
+    localStorage.setItem('number', number + 2);
+    localStorage.setItem('level', level + 1);
+    localStorage.setItem('score', score);
+
     location.reload();
   });
 
   $('#retryButton').on('click', function() {
     localStorage.removeItem('length');
     localStorage.removeItem('number');
+    localStorage.removeItem('level');
+    localStorage.removeItem('score');
     location.reload();
   });
-
-  //初期化&描画
-  generateGrid(answerArray, 'answerBoard');
-
-  // 解答のフェードアウト
-  hideAnswer(length, miliSec);
 
 });
