@@ -1,0 +1,54 @@
+body{
+  text-align: center;
+}
+
+header{
+  background-color: #000;
+  color: #fff;
+}
+
+#statusWrapper{
+/*  margin-left: 70%;*/
+}
+
+#gameArea{
+  width: 100%;
+  height: 500px;
+}
+
+#gameBoard, td{
+  border-collapse: collapse;
+  border: solid 1px #000;
+}
+
+#gameBoard{
+  margin: 50px auto;
+}
+
+td {
+  width: 75px;
+  height: 75px;
+  font-size: 40px;
+  color: #333;
+}
+
+#resultArea{
+}
+
+#result{
+}
+
+.button{
+  /*display: none;*/
+  text-align: center;
+  background-color: #aaa;
+  color: #000;
+  width: 100px;
+  height: 50px;
+  line-height: 50px;
+  margin: 20px auto;
+}
+
+#nextButton, #retryButton{
+  display: none;
+}
