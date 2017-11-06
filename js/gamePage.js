@@ -1,4 +1,5 @@
-let diagram = '●'
+let diagram = '●';
+let playerName = localStorage.getItem('playerName') ? JSON.parse(localStorage.getItem('playerName')) : 'no name';
 let length = localStorage.getItem('length') ? JSON.parse(localStorage.getItem('length')) : 3; //マス目の長さ
 let number = localStorage.getItem('number') ? JSON.parse(localStorage.getItem('number')) : 5; //●の数
 let miliSec = 1000; // 解答が消えるまでの時間
@@ -6,6 +7,7 @@ let answerArray = generateAnswerArray(length, number, diagram);
 let playerArray = JSON.parse(JSON.stringify((new Array(length)).fill((new Array(length)).fill(''))));
 let level = localStorage.getItem('level') ? JSON.parse(localStorage.getItem('level')) : 1;
 let score = localStorage.getItem('score') ? JSON.parse(localStorage.getItem('score')) : 0;;
+let rankingArray = localStorage.getItem('rankingArray') ? JSON.parse(localStorage.getItem('rankingArray')) : [];
 
 function sleepByPromise(miliSec) { 
   return new Promise((resolve) => setTimeout(resolve, miliSec));
@@ -119,8 +121,14 @@ $(() => {
       $('#nextButton').css('display', 'block');
     } else {
       $('#result').text('不正解');
+      let resultData = {};
+      resultData.score = score;
+      resultData.playerName = playerName;
+      rankingArray.push(resultData);
+      localStorage.setItem('rankingArray', JSON.stringify(rankingArray));
       showAnswer(answerArray, playerArray);
       $('#retryButton').css('display', 'block');
+      $('#backToTopButton').css('display', 'block');
     }
   });
 
@@ -134,6 +142,14 @@ $(() => {
   });
 
   $('#retryButton').on('click', function() {
+    localStorage.removeItem('length');
+    localStorage.removeItem('number');
+    localStorage.removeItem('level');
+    localStorage.removeItem('score');
+    location.reload();
+  });
+
+  $('#backToTopButton').on('click', function() {
     localStorage.removeItem('length');
     localStorage.removeItem('number');
     localStorage.removeItem('level');
