@@ -2,8 +2,39 @@
   background-color: #000;
   color: #fff;
   width: 100%;
-  height: 100%;
-  position: fixed;
+  height: 1000px;
+}
+
+#title{
+  font-size: 48px;
+  padding-top: 20px;
+}
+
+#playerName{
+  margin-top: 40px;
+}
+
+#rankingPage{
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  height: 1000px;
+}
+
+#ranking{
+  padding-top: 20px;
+  margin: 20px auto;
+  border: solid 1px #fff;
+  border-collapse: collapse;
+}
+
+#rankingPage td{
+  color: #fff;
+}
+
+#ranking th, #ranking td{
+  font-size: 20px;
+  border: solid 1px #fff;
 }
 
 body{
